@@ -1,0 +1,33 @@
+# python
+__pycache__/
+*.pyc
+
+# raporty
+*.csv
+*.xlsx
+
+# config lokalny
+config.json
+
+# vscode
+.vscode/
+
+# system
+.DS_Store
+Thumbs.db
+
+project_for_ai.txt
+*.xml
+data/
+!tests/data/
+!tests/data/*.xml
+reports/
+legacy/
+
+.venv/
+.pytest_cache/
+.ruff_cache/
+__pycache__/
+*.pyc
+tax_app_snapshot.txt
+tax_app.egg-info/

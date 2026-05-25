@@ -1,0 +1,89 @@
+[project]
+name = "tax-app"
+version = "0.1.0"
+description = "Local CLI tool for Polish sole proprietorship tax calculations"
+license = { text = "MIT" }
+requires-python = ">=3.11"
+dependencies = [
+    "pydantic",
+    "openpyxl",
+    "defusedxml",
+    "requests>=2.34.0",
+    "pathspec>=1.1.1",
+]
+
+[project.scripts]
+tax-app = "main:main"
+
+[tool.black]
+line-length = 100
+target-version = ["py311"]
+
+[tool.ruff]
+line-length = 100
+target-version = "py311"
+
+[tool.ruff.lint]
+select = [
+    "E",
+    "F",
+    "I",
+]
+ignore = [
+    "E501",
+]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+python_files = ["test_*.py"]
+pythonpath = ["."]
+
+[tool.setuptools]
+py-modules = [
+    "main",
+    "calculator_costs",
+    "calculator_tax",
+    "config_loader",
+    "delegation_checks",
+    "models",
+    "other_costs",
+    "parser_trips",
+]
+
+[tool.setuptools.packages.find]
+include = ["jpk*", "ksef*", "report*"]
+exclude = ["tests*", "data*", "legacy*"]
+
+[dependency-groups]
+dev = [
+    "bandit>=1.9.4",
+    "black>=26.3.1",
+    "pipreqs>=0.5.0",
+    "pytest>=9.0.3",
+    "responses>=0.26.0",
+    "ruff>=0.15.12",
+]
+
+[tool.uv]
+package = true
+
+[tool.bandit]
+exclude_dirs = [
+    ".venv",
+    "tests",
+    "__pycache__",
+    "legacy",
+    "data",
+]
+skips = [
+    "B101",
+    "B404",
+    "B603",
+    "B607",
+    "B110",
+    "B112",
+]
+
+[build-system]
+requires = ["setuptools>=69"]
+build-backend = "setuptools.build_meta"

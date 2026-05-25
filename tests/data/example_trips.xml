@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Voyages>
+    <Voyage NrDel="T004/2026" Pracownik="Jan Testowy" Cel="Brunsbüttel" Powód="Test" Transport="samochód służbowy" Zaliczka="0" Waluta="PLN" Od="2026-03-01" Do="2026-03-25" Rok="2026" DataPodpisu="2026-02-25" Ilość_Dowodów="0" Test="true" Created="2026-03-26T12:35:22">
+        <Iter>
+            <Nr>1</Nr>
+            <Kraj>Polska</Kraj>
+            <Start>Kraków</Start>
+            <Wyjazd>2026-03-01 07:00</Wyjazd>
+            <Granica>2026-03-01 13:15</Granica>
+            <Cel>Granica</Cel>
+            <Przyjazd>2026-03-01 13:15</Przyjazd>
+            <Różnica>6</Różnica>
+        </Iter>
+        <Iter>
+            <Nr>2</Nr>
+            <Kraj>Niemcy</Kraj>
+            <Start>Granica</Start>
+            <Wyjazd>2026-03-01 13:15</Wyjazd>
+            <Granica>2026-03-01 13:15</Granica>
+            <Cel>Brunsbüttel</Cel>
+            <Przyjazd>2026-03-01 18:10</Przyjazd>
+            <Różnica>5</Różnica>
+        </Iter>
+        <Voy>
+            <Nr>1</Nr>
+            <Wyliczenie_diety Kraj="Polska" Waluta="PLN" Stawka="45" Jednostki="0">
+                <Kwota_diety>0</Kwota_diety>
+            </Wyliczenie_diety>
+            <Waluta Kurs_waluty="1" Data_waluty="2026-03-01" Tabela_waluty=""/>
+            <Dieta_PLN>0</Dieta_PLN>
+        </Voy>
+        <Voy>
+            <Nr>2</Nr>
+            <Wyliczenie_diety Kraj="Niemcy" Waluta="EUR" Stawka="49" Jednostki="23.5">
+                <Kwota_diety>1151.5</Kwota_diety>
+            </Wyliczenie_diety>
+            <Waluta Kurs_waluty="4.2692" Data_waluty="2026-03-25" Tabela_waluty="058/A/NBP/2026"/>
+            <Dieta_PLN>4915.98</Dieta_PLN>
+        </Voy>
+    </Voyage>
+</Voyages>

@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<JPK>
+  <Ewidencja>
+    <SprzedazWiersz>
+      <DataSprzedazy>2026-03-15</DataSprzedazy>
+      <DataWystawienia>2026-03-15</DataWystawienia>
+      <NazwaKontrahenta>Testowy klient</NazwaKontrahenta>
+      <DowodSprzedazy>FV/1/2026</DowodSprzedazy>
+      <K_19>1000.00</K_19>
+      <K_20>230.00</K_20>
+    </SprzedazWiersz>
+
+    <ZakupWiersz>
+      <DataZakupu>2026-03-16</DataZakupu>
+      <DataWplywu>2026-03-16</DataWplywu>
+      <NazwaDostawcy>Testowy dostawca</NazwaDostawcy>
+      <DowodZakupu>FZ/1/2026</DowodZakupu>
+      <K_42>200.00</K_42>
+      <K_43>46.00</K_43>
+    </ZakupWiersz>
+  </Ewidencja>
+</JPK>

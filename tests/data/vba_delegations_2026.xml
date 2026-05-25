@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Voyages>
+  <Voyage NrDel="T001/2026" Pracownik="Jan Testowy" Cel="Brunsbüttel" Powód="Demontaż instalacji w KKB w Brunsbüttel" Transport="samochód służbowy" Zaliczka="0" Waluta="PLN" Od="2026-01-04" Do="2026-01-31" Rok="2026" DataPodpisu="2025-12-31" Ilość_Dowodów="0" Test="false" Created="2026-02-01T07:55:46">
+    <Iter><Nr>1</Nr><Kraj>Polska</Kraj><Start>Kraków</Start><Wyjazd>2026-01-04 07:15</Wyjazd><Granica>2026-01-01 14:20</Granica><Cel>Granica</Cel><Przyjazd>2026-01-01 14:20</Przyjazd><Różnica>0</Różnica></Iter>
+    <Voy><Nr>1</Nr><Wyliczenie_diety Kraj="Polska" Waluta="PLN" Stawka="45" Jednostki="0"><Kwota_diety>0</Kwota_diety></Wyliczenie_diety><Waluta Kurs_waluty="1" Data_waluty="2026-01-01" Tabela_waluty=""/><Dieta_PLN>0</Dieta_PLN></Voy>
+    <Voy><Nr>2</Nr><Wyliczenie_diety Kraj="Niemcy" Waluta="EUR" Stawka="49" Jednostki="29.3333333333333"><Kwota_diety>1437.33</Kwota_diety></Wyliczenie_diety><Waluta Kurs_waluty="4.2131" Data_waluty="2026-01-30" Tabela_waluty="A020Z260130"/><Dieta_PLN>6055.63</Dieta_PLN></Voy>
+    <Voy><Nr>3</Nr><Wyliczenie_diety Kraj="Polska" Waluta="PLN" Stawka="45" Jednostki="0"><Kwota_diety>0</Kwota_diety></Wyliczenie_diety><Waluta Kurs_waluty="1" Data_waluty="2026-01-31" Tabela_waluty=""/><Dieta_PLN>0</Dieta_PLN></Voy>
+  </Voyage>
+  <Voyage NrDel="T002/2026" Pracownik="Jan Testowy" Cel="Rzeszów" Powód="Rozmowy handlowe" Transport="samochód prywatny" Zaliczka="0" Waluta="PLN" Od="2026-02-03" Do="2026-02-04" Rok="2026" DataPodpisu="2026-01-30" Ilość_Dowodów="0" Test="true" Created="2026-03-02T17:35:23">
+    <Voy><Nr>1</Nr><Wyliczenie_diety Kraj="Polska" Waluta="PLN" Stawka="45" Jednostki="1.5"><Kwota_diety>67.5</Kwota_diety></Wyliczenie_diety><Waluta Kurs_waluty="1" Data_waluty="2026-02-04" Tabela_waluty=""/><Dieta_PLN>67.5</Dieta_PLN></Voy>
+  </Voyage>
+  <Voyage NrDel="T003/2026" Pracownik="Jan Testowy" Cel="Brunsbüttel" Powód="Rozmowy handlowe" Transport="samochód służbowy" Zaliczka="0" Waluta="PLN" Od="2026-02-08" Do="2026-02-28" Rok="2026" DataPodpisu="2026-02-04" Ilość_Dowodów="0" Test="true" Created="2026-03-02T17:42:05">
+    <Voy><Nr>1</Nr><Wyliczenie_diety Kraj="Polska" Waluta="PLN" Stawka="45" Jednostki="0"><Kwota_diety>0</Kwota_diety></Wyliczenie_diety><Waluta Kurs_waluty="1" Data_waluty="2026-02-08" Tabela_waluty=""/><Dieta_PLN>0</Dieta_PLN></Voy>
+    <Voy><Nr>2</Nr><Wyliczenie_diety Kraj="Niemcy" Waluta="EUR" Stawka="49" Jednostki="19.5"><Kwota_diety>955.5</Kwota_diety></Wyliczenie_diety><Waluta Kurs_waluty="4.2233" Data_waluty="2026-02-07" Tabela_waluty="A040Z260227&#xA;"/><Dieta_PLN>4035.36</Dieta_PLN></Voy>
+    <Voy><Nr>3</Nr><Wyliczenie_diety Kraj="Polska" Waluta="PLN" Stawka="45" Jednostki="0"><Kwota_diety>0</Kwota_diety></Wyliczenie_diety><Waluta Kurs_waluty="1" Data_waluty="2026-02-28" Tabela_waluty=""/><Dieta_PLN>0</Dieta_PLN></Voy>
+  </Voyage>
+  <Voyage NrDel="T004/2026" Pracownik="Jan Testowy" Cel="Brunsbüttel" Powód="Demontaż instalacji w KKB w Brunsbüttel" Transport="samochód służbowy" Zaliczka="0" Waluta="PLN" Od="2026-03-01" Do="2026-03-25" Rok="2026" DataPodpisu="2026-02-25" Ilość_Dowodów="0" Test="true" Created="2026-03-26T12:35:22">
+    <Voy><Nr>1</Nr><Wyliczenie_diety Kraj="Polska" Waluta="PLN" Stawka="45" Jednostki="0"><Kwota_diety>0</Kwota_diety></Wyliczenie_diety><Waluta Kurs_waluty="1" Data_waluty="2026-03-01" Tabela_waluty=""/><Dieta_PLN>0</Dieta_PLN></Voy>
+    <Voy><Nr>2</Nr><Wyliczenie_diety Kraj="Niemcy" Waluta="EUR" Stawka="49" Jednostki="23.5"><Kwota_diety>1151.5</Kwota_diety></Wyliczenie_diety><Waluta Kurs_waluty="4.2692" Data_waluty="2026-03-25" Tabela_waluty="058/A/NBP/2026"/><Dieta_PLN>4915.98</Dieta_PLN></Voy>
+    <Voy><Nr>3</Nr><Wyliczenie_diety Kraj="Polska" Waluta="PLN" Stawka="45" Jednostki="0"><Kwota_diety>0</Kwota_diety></Wyliczenie_diety><Waluta Kurs_waluty="1" Data_waluty="2026-03-25" Tabela_waluty=""/><Dieta_PLN>0</Dieta_PLN></Voy>
+  </Voyage>
+  <Voyage NrDel="T005/2026" Pracownik="Jan Testowy" Cel="Brunsbüttel" Powód="Demontaż instalacji w KKB w Brunsbüttel" Transport="samochód służbowy" Zaliczka="0" Waluta="PLN" Od="2026-04-12" Do="2026-04-30" Rok="2026" DataPodpisu="2026-04-08" Ilość_Dowodów="0" Test="false" Created="2026-05-01T19:09:20">
+    <Voy><Nr>1</Nr><Wyliczenie_diety Kraj="Polska" Waluta="PLN" Stawka="45" Jednostki="0"><Kwota_diety>0</Kwota_diety></Wyliczenie_diety><Waluta Kurs_waluty="1" Data_waluty="2026-04-12" Tabela_waluty=""/><Dieta_PLN>0</Dieta_PLN></Voy>
+    <Voy><Nr>2</Nr><Wyliczenie_diety Kraj="Niemcy" Waluta="EUR" Stawka="49" Jednostki="18.3333333333333"><Kwota_diety>898.33</Kwota_diety></Wyliczenie_diety><Waluta Kurs_waluty="4.2589" Data_waluty="2026-04-30" Tabela_waluty="A083Z260430"/><Dieta_PLN>3825.91</Dieta_PLN></Voy>
+    <Voy><Nr>3</Nr><Wyliczenie_diety Kraj="Polska" Waluta="PLN" Stawka="45" Jednostki="0"><Kwota_diety>0</Kwota_diety></Wyliczenie_diety><Waluta Kurs_waluty="1" Data_waluty="2026-04-30" Tabela_waluty=""/><Dieta_PLN>0</Dieta_PLN></Voy>
+  </Voyage>
+  <Voyage NrDel="T006/2026" Pracownik="Jan Testowy" Cel="Brunsbüttel" Powód="Demontaż instalacji w KKB w Brunsbüttel" Transport="samochód służbowy" Zaliczka="0" Waluta="PLN" Od="2026-05-03" Do="2026-05-14" Rok="2026" DataPodpisu="2026-04-29" Ilość_Dowodów="0" Test="true" Created="2026-05-18T11:05:07">
+    <Voy><Nr>1</Nr><Wyliczenie_diety Kraj="Polska" Waluta="PLN" Stawka="45" Jednostki="0"><Kwota_diety>0</Kwota_diety></Wyliczenie_diety><Waluta Kurs_waluty="1" Data_waluty="2026-05-03" Tabela_waluty=""/><Dieta_PLN>0</Dieta_PLN></Voy>
+    <Voy><Nr>2</Nr><Wyliczenie_diety Kraj="Niemcy" Waluta="EUR" Stawka="49" Jednostki="10.3333333333333"><Kwota_diety>506.33</Kwota_diety></Wyliczenie_diety><Waluta Kurs_waluty="4.2524" Data_waluty="2026-05-03" Tabela_waluty="A091Z260513&#xA;"/><Dieta_PLN>2153.13</Dieta_PLN></Voy>
+    <Voy><Nr>3</Nr><Wyliczenie_diety Kraj="Polska" Waluta="PLN" Stawka="45" Jednostki="0"><Kwota_diety>0</Kwota_diety></Wyliczenie_diety><Waluta Kurs_waluty="1" Data_waluty="2026-05-14" Tabela_waluty=""/><Dieta_PLN>0</Dieta_PLN></Voy>
+  </Voyage>
+</Voyages>
