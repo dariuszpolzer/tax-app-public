@@ -24,6 +24,7 @@ def test_export_monthly_report_labels_pit_as_business_pit(tmp_path):
                 "pit_payment": Decimal("0.00"),
             }
         },
+        health_monthly={},
         out_file=out_file,
     )
 
@@ -32,3 +33,5 @@ def test_export_monthly_report_labels_pit_as_business_pit(tmp_path):
     assert "Dochód JDG narastająco" in header
     assert "PIT JDG narastająco" in header
     assert "Zaliczka PIT JDG" in header
+    assert "Dochód JDG do zdrowotnej" in header
+    assert "Składka zdrowotna JDG" in header

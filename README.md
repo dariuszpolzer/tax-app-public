@@ -20,6 +20,7 @@ Aplikacja korzysta z:
 
 - miesięczne zestawienie VAT (należny / naliczony)
 - obliczanie zaliczek PIT JDG narastająco
+- obliczanie miesięcznej składki zdrowotnej JDG na skali
 - roczne rozliczenie PIT na skali z emeryturą
 - wspólne rozliczenie z małżonkiem według zasady: podatek od połowy łącznej podstawy razy dwa
 - porównanie PIT osobno vs wspólnie
@@ -107,6 +108,10 @@ osobno ze wspólnym.
 Miesięczny raport PIT dotyczy tylko zaliczek z JDG. Pełne rozliczenie z emeryturą
 i małżonkiem jest liczone w raporcie rocznym.
 
+Składka zdrowotna JDG jest liczona osobno od dochodu miesięcznego działalności.
+Reguły roczne są w `health_contribution.py`; dla 2026 roku aplikacja używa
+stawki 9% i minimalnej składki miesięcznej zapisanej w parametrach roku.
+
 ## Uruchomienie
 
 Raport roczny:
@@ -127,7 +132,8 @@ Wynikiem są:
 - `report_yearly.csv`,
 - `report_tax.xlsx`.
 
-`report_monthly.csv` zawiera VAT oraz miesięczne narastające zaliczki `PIT JDG`.
+`report_monthly.csv` zawiera VAT, miesięczne narastające zaliczki `PIT JDG`
+oraz miesięczną składkę zdrowotną JDG.
 `report_yearly.csv` i `report_tax.xlsx` zawierają roczne PIT z emeryturą,
 dochodem małżonka oraz porównaniem `PIT osobno` i `PIT wspólnie`.
 

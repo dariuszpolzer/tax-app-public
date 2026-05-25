@@ -8,6 +8,7 @@ from calculator_costs import sum_trip_costs, sum_trip_costs_by_month
 from calculator_tax import calculate_pit_scale
 from config_loader import load_config, load_tax_scenario_from_config
 from delegation_checks import build_delegation_check_report
+from health_contribution import calculate_health_contribution_monthly
 from jpk.calculator_jpk import sum_jpk_folder
 from other_costs import load_other_costs, sum_other_costs_by_month
 from parser_trips import load_voyages
@@ -236,6 +237,18 @@ def print_pit_monthly(pit_monthly):
         )
 
 
+def print_health_monthly(health_monthly):
+    print("\nRAPORT SKŁADKI ZDROWOTNEJ JDG")
+
+    for month, data in sorted(health_monthly.items()):
+        print(
+            f"{month} | "
+            f"dochód JDG: {data.business_income:.2f} PLN | "
+            f"minimum: {data.minimum_contribution:.2f} PLN | "
+            f"składka zdrowotna: {data.contribution:.2f} PLN"
+        )
+
+
 def print_yearly_summary(
     year,
     trips,
@@ -246,6 +259,7 @@ def print_yearly_summary(
     individual_pit,
     joint_pit,
     joint_tax_saving,
+    health_contribution_total,
     yearly,
     pit_result,
 ):
@@ -260,6 +274,7 @@ def print_yearly_summary(
     print(f"Koszty netto JPK: {yearly['purchase_net']:.2f} PLN")
     print(f"Podstawa PIT: {pit_result.taxable_income:.2f} PLN")
     print(f"PIT: {pit_result.tax:.2f} PLN")
+    print(f"Składka zdrowotna JDG: {health_contribution_total:.2f} PLN")
     print(f"PIT osobno: {individual_pit.tax:.2f} PLN")
     if joint_pit is not None:
         print(f"PIT wspólnie: {joint_pit.tax:.2f} PLN")
@@ -274,6 +289,7 @@ def export_all_reports(
     delegations_monthly,
     other_costs_monthly,
     pit_monthly,
+    health_monthly,
     yearly,
     pit_result,
     trips,
@@ -284,6 +300,7 @@ def export_all_reports(
     individual_pit,
     joint_pit,
     joint_tax_saving,
+    health_contribution_total,
     year,
     out_dir,
 ):
@@ -299,6 +316,7 @@ def export_all_reports(
         delegations_monthly,
         other_costs_monthly,
         pit_monthly,
+        health_monthly,
         monthly_report,
     )
 
@@ -312,6 +330,7 @@ def export_all_reports(
         individual_pit,
         joint_pit,
         joint_tax_saving,
+        health_contribution_total,
         yearly,
         pit_result,
         yearly_report,
@@ -322,6 +341,7 @@ def export_all_reports(
         delegations_monthly,
         other_costs_monthly,
         pit_monthly,
+        health_monthly,
         yearly,
         pit_result,
         pension_income,
@@ -329,6 +349,7 @@ def export_all_reports(
         individual_pit,
         joint_pit,
         joint_tax_saving,
+        health_contribution_total,
         trips,
         year,
         excel_report,
@@ -388,11 +409,17 @@ def main():
         delegations_monthly,
         other_costs_monthly,
     )
+    health_summary = calculate_health_contribution_monthly(
+        monthly,
+        delegations_monthly,
+        other_costs_monthly,
+    )
 
     print_delegations(trips)
     print_monthly_jpk(monthly)
     print_corrections(monthly)
     print_pit_monthly(pit_monthly)
+    print_health_monthly(health_summary.monthly)
     print_yearly_summary(
         current_year,
         trips,
@@ -403,6 +430,7 @@ def main():
         settlement.individual_pit,
         settlement.joint_pit,
         settlement.joint_tax_saving,
+        health_summary.total,
         yearly,
         pit_result,
     )
@@ -412,6 +440,7 @@ def main():
         delegations_monthly,
         other_costs_monthly,
         pit_monthly,
+        health_summary.monthly,
         yearly,
         pit_result,
         trips,
@@ -422,6 +451,7 @@ def main():
         settlement.individual_pit,
         settlement.joint_pit,
         settlement.joint_tax_saving,
+        health_summary.total,
         current_year,
         args.out_dir,
     )

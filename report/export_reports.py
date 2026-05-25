@@ -6,7 +6,12 @@ def pln(x):
 
 
 def export_monthly_report(
-    monthly_jpk, delegations_monthly, other_costs_monthly, pit_monthly, out_file
+    monthly_jpk,
+    delegations_monthly,
+    other_costs_monthly,
+    pit_monthly,
+    health_monthly,
+    out_file,
 ):
     with open(out_file, "w", newline="", encoding="utf-8-sig") as f:
         writer = csv.writer(f, delimiter=";")
@@ -24,12 +29,15 @@ def export_monthly_report(
                 "Dochód JDG narastająco",
                 "PIT JDG narastająco",
                 "Zaliczka PIT JDG",
+                "Dochód JDG do zdrowotnej",
+                "Składka zdrowotna JDG",
             ]
         )
 
         for month in sorted(monthly_jpk.keys()):
             jpk = monthly_jpk[month]
             pit = pit_monthly.get(month, {})
+            health = health_monthly.get(month)
 
             writer.writerow(
                 [
@@ -44,6 +52,8 @@ def export_monthly_report(
                     pln(pit.get("income_cumulative", 0)),
                     pln(pit.get("pit_cumulative", 0)),
                     pln(pit.get("pit_payment", 0)),
+                    pln(health.business_income if health else 0),
+                    pln(health.contribution if health else 0),
                 ]
             )
 
@@ -58,6 +68,7 @@ def export_yearly_report(
     individual_pit,
     joint_pit,
     joint_tax_saving,
+    health_contribution_total,
     yearly_jpk,
     pit_result,
     out_file,
@@ -92,6 +103,7 @@ def export_yearly_report(
         writer.writerow([])
         writer.writerow(["Podstawa PIT", pln(pit_result.taxable_income)])
         writer.writerow(["PIT", pln(pit_result.tax)])
+        writer.writerow(["Składka zdrowotna JDG", pln(health_contribution_total)])
         writer.writerow(["PIT osobno", pln(individual_pit.tax)])
         if joint_pit is not None:
             writer.writerow(["PIT wspólnie", pln(joint_pit.tax)])

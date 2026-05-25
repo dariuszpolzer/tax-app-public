@@ -47,6 +47,7 @@ def add_dashboard_sheet(
     individual_pit,
     joint_pit,
     joint_tax_saving,
+    health_contribution_total,
     year,
 ):
     ws = wb.active
@@ -64,6 +65,7 @@ def add_dashboard_sheet(
         ["Dochód małżonka", pln(spouse_income)],
         ["Dochód PIT", pln(pit_result.taxable_income)],
         ["PIT", pln(pit_result.tax)],
+        ["Składka zdrowotna JDG", pln(health_contribution_total)],
         ["PIT osobno", pln(individual_pit.tax)],
         ["VAT do zapłaty", pln(yearly_jpk["vat_to_pay"])],
     ]
@@ -89,6 +91,7 @@ def export_excel_report(
     delegations_monthly,
     other_costs_monthly,
     pit_monthly,
+    health_monthly,
     yearly_jpk,
     pit_result,
     pension_income,
@@ -96,6 +99,7 @@ def export_excel_report(
     individual_pit,
     joint_pit,
     joint_tax_saving,
+    health_contribution_total,
     trips,
     year,
     out_file,
@@ -120,6 +124,7 @@ def export_excel_report(
         individual_pit,
         joint_pit,
         joint_tax_saving,
+        health_contribution_total,
         year,
     )
 
@@ -177,6 +182,29 @@ def export_excel_report(
     style_header(ws)
     autofit(ws)
 
+    ws = wb.create_sheet("Zdrowotna JDG")
+    ws.append(
+        [
+            "Miesiąc",
+            "Dochód JDG",
+            "Minimalna składka",
+            "Składka zdrowotna",
+        ]
+    )
+
+    for month, data in sorted(health_monthly.items()):
+        ws.append(
+            [
+                month,
+                pln(data.business_income),
+                pln(data.minimum_contribution),
+                pln(data.contribution),
+            ]
+        )
+
+    style_header(ws)
+    autofit(ws)
+
     ws = wb.create_sheet("Delegacje")
     ws.append(["Miesiąc", "Koszty delegacji"])
 
@@ -207,6 +235,7 @@ def export_excel_report(
         ["Dochód małżonka", pln(spouse_income)],
         ["Podstawa PIT", pln(pit_result.taxable_income)],
         ["PIT", pln(pit_result.tax)],
+        ["Składka zdrowotna JDG", pln(health_contribution_total)],
         ["PIT osobno", pln(individual_pit.tax)],
         ["VAT należny", pln(yearly_jpk["sales_vat"])],
         ["VAT naliczony", pln(yearly_jpk["purchase_vat"])],
