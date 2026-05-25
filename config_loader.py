@@ -21,16 +21,18 @@ def load_config(path="config.json", require_jpk=True):
     with open(config_path, encoding="utf-8") as f:
         config = json.load(f)
 
-    required_keys = ["trips_xml", "jpk_folder"]
+    if "jpk_folder" not in config:
+        raise KeyError("Brak wymaganego klucza w config.json: jpk_folder")
 
-    for key in required_keys:
-        if key not in config:
-            raise KeyError(f"Brak wymaganego klucza w config.json: {key}")
-
-    trips_xml = Path(config["trips_xml"])
     jpk_folder = Path(config["jpk_folder"])
 
-    if not trips_xml.exists():
+    delegations_csv = config.get("delegations_csv")
+    trips_xml = config.get("trips_xml")
+
+    if delegations_csv and not Path(delegations_csv).exists():
+        raise FileNotFoundError(f"Nie istnieje plik delegacji CSV: {delegations_csv}")
+
+    if trips_xml and not Path(trips_xml).exists():
         raise FileNotFoundError(f"Nie istnieje plik delegacji XML: {trips_xml}")
 
     if require_jpk and not jpk_folder.exists():

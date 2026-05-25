@@ -36,17 +36,25 @@ uv sync --dev
 
 ## Delegacje
 
-Pole `trips_xml` w `config.json` może wskazywać plik XML eksportowany ze starej aplikacji VBA. Parser obsługuje korzenie `<Voyages>` oraz `<Translationems>`, odczytuje odcinki podróży i gotowe wyliczenia diet, a następnie dolicza `Dieta_PLN` do kosztów delegacji.
+Publicznym formatem wejściowym delegacji jest CSV wskazywany przez
+`delegations_csv` w `config.json`:
 
-Przykład:
-
-```json
-{
-  "trips_xml": "C:/tax-app-data/delegacje/Col_Voyage.xml"
-}
+```csv
+number;date_from;date_to;year;city;description;transport;employee;amount_pln;test
+DEL/1/2026;2026-03-01;2026-03-25;2026;Brunsbuttel;Delegacja sluzbowa;samochod;Jan Testowy;4915.98;false
 ```
 
-Koszt delegacji jest przypisywany do miesiąca zakończenia delegacji (`Do`). Pole `Test` z XML jest zachowywane w modelu danych, ale na tym etapie importer nie pomija automatycznie delegacji testowych.
+Minimalne pola potrzebne do obliczeń to `date_to` oraz `amount_pln`.
+Koszt delegacji jest przypisywany do miesiąca z `date_to`. Jeśli w configu nie ma
+ani `delegations_csv`, ani `trips_xml`, aplikacja przyjmuje brak delegacji.
+
+`trips_xml` jest importerem legacy dla prywatnego formatu `Voyage.xml` używanego
+we wcześniejszych makrach VBA. Nie jest to publiczny ani oficjalny format danych.
+Do przejścia ze starego XML na CSV służy konwerter:
+
+```powershell
+uv run python tools/convert_voyages_to_delegations_csv.py C:/tax-app-data/delegacje/Col_Voyage.xml C:/tax-app-data/delegacje/delegations.csv
+```
 
 ## Dane wejściowe
 
@@ -71,6 +79,7 @@ Plik `config.json` wskazuje źródła danych:
     "enabled": true,
     "annual_income": "18000.00"
   },
+  "delegations_csv": "C:/tax-app-data/delegacje/delegations.csv",
   "trips_xml": "C:/tax-app-data/delegacje/Col_Voyage.xml",
   "jpk_folder": "C:/tax-app-data/jpk",
   "other_costs_csv": "C:/tax-app-data/other_costs.csv"

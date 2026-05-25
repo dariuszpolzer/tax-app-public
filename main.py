@@ -8,6 +8,7 @@ from calculator_costs import sum_trip_costs, sum_trip_costs_by_month
 from calculator_tax import calculate_pit_scale
 from config_loader import load_config, load_tax_scenario_from_config
 from delegation_checks import build_delegation_check_report
+from delegations_csv import load_delegations_csv
 from health_contribution import calculate_health_contribution_monthly
 from jpk.calculator_jpk import sum_jpk_folder
 from other_costs import load_other_costs, sum_other_costs_by_month
@@ -368,7 +369,13 @@ def main():
     current_year = args.year or datetime.now().year
     current_month = args.month
 
-    all_trips = load_voyages(Path(config["trips_xml"]))
+    if config.get("delegations_csv"):
+        all_trips = load_delegations_csv(config["delegations_csv"])
+    elif config.get("trips_xml"):
+        all_trips = load_voyages(Path(config["trips_xml"]))
+    else:
+        all_trips = []
+
     trips = [trip for trip in all_trips if trip_is_in_scope(trip, current_year, current_month)]
 
     if args.check_delegations:
