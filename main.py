@@ -9,7 +9,7 @@ from calculator_tax import calculate_pit_scale
 from config_loader import load_config, load_tax_scenario_from_config
 from delegation_checks import build_delegation_check_report
 from delegations_csv import load_delegations_csv
-from health_contribution import calculate_health_contribution_monthly
+from health_contribution import PREVIOUS_MONTH, calculate_health_contribution_monthly
 from jpk.calculator_jpk import sum_jpk_folder
 from other_costs import load_other_costs, sum_other_costs_by_month
 from parser_trips import load_voyages
@@ -362,6 +362,10 @@ def export_all_reports(
     print(excel_report)
 
 
+def health_contribution_income_basis_from_config(config):
+    return config.get("health_contribution", {}).get("income_basis", PREVIOUS_MONTH)
+
+
 def main():
     args = parse_args()
     config = load_config(args.config, require_jpk=not args.check_delegations)
@@ -420,6 +424,7 @@ def main():
         monthly,
         delegations_monthly,
         other_costs_monthly,
+        income_basis=health_contribution_income_basis_from_config(config),
     )
 
     print_delegations(trips)

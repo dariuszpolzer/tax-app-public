@@ -71,6 +71,9 @@ Plik `config.json` wskazuje źródła danych:
     "taxation_form": "scale",
     "vat_payer": true
   },
+  "health_contribution": {
+    "income_basis": "previous_month"
+  },
   "pension": {
     "enabled": true,
     "annual_income": "42000.00"
@@ -118,6 +121,23 @@ Miesięczny raport PIT dotyczy tylko zaliczek z JDG. Pełne rozliczenie z emeryt
 i małżonkiem jest liczone w raporcie rocznym.
 
 Składka zdrowotna JDG jest liczona osobno od dochodu miesięcznego działalności.
+Domyślnie aplikacja używa mechanizmu ZUS, czyli składka za dany miesiąc jest
+liczona od dochodu z miesiąca poprzedniego:
+
+```json
+"health_contribution": {
+  "income_basis": "previous_month"
+}
+```
+
+Dostępny jest też wariant pomocniczy liczony od dochodu tego samego miesiąca:
+
+```json
+"health_contribution": {
+  "income_basis": "current_month"
+}
+```
+
 Reguły roczne są w `health_contribution.py`; dla 2026 roku aplikacja używa
 stawki 9% i minimalnej składki miesięcznej zapisanej w parametrach roku.
 

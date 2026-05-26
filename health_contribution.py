@@ -4,6 +4,8 @@ from decimal import Decimal
 from calculator_tax import money
 
 ZERO = Decimal("0.00")
+CURRENT_MONTH = "current_month"
+PREVIOUS_MONTH = "previous_month"
 
 
 @dataclass(frozen=True)
@@ -54,14 +56,23 @@ def calculate_health_contribution_scale(
     delegation_costs: Decimal = ZERO,
     other_costs: Decimal = ZERO,
 ) -> HealthContributionMonth:
-    year = int(month[:4])
-    month_number = int(month[5:7])
-    rules = get_health_contribution_rules(year)
-
     business_income = max(
         ZERO,
         revenue - purchase_costs - delegation_costs - other_costs,
     )
+
+    return calculate_health_contribution_from_income(month, business_income)
+
+
+def calculate_health_contribution_from_income(
+    month: str,
+    business_income: Decimal,
+) -> HealthContributionMonth:
+    year = int(month[:4])
+    month_number = int(month[5:7])
+    rules = get_health_contribution_rules(year)
+
+    business_income = max(ZERO, business_income)
     minimum = rules.minimum_for_month(month_number)
     contribution = max(money(business_income * rules.rate), minimum)
 
@@ -73,26 +84,63 @@ def calculate_health_contribution_scale(
     )
 
 
+def previous_month(month: str) -> str:
+    year = int(month[:4])
+    month_number = int(month[5:7])
+
+    if month_number == 1:
+        return f"{year - 1}-12"
+
+    return f"{year}-{month_number - 1:02d}"
+
+
+def calculate_monthly_business_income(
+    month: str,
+    monthly_jpk,
+    delegations_monthly,
+    other_costs_monthly,
+) -> Decimal:
+    data = monthly_jpk.get(month, {})
+
+    return max(
+        ZERO,
+        Decimal(str(data.get("sales_net", ZERO)))
+        - Decimal(str(data.get("purchase_net", ZERO)))
+        - Decimal(str(delegations_monthly.get(month, ZERO)))
+        - Decimal(str(other_costs_monthly.get(month, ZERO))),
+    )
+
+
 def calculate_health_contribution_monthly(
     monthly_jpk,
     delegations_monthly,
     other_costs_monthly,
+    income_basis: str = PREVIOUS_MONTH,
 ) -> HealthContributionSummary:
+    if income_basis not in {CURRENT_MONTH, PREVIOUS_MONTH}:
+        raise ValueError(f"Nieprawidłowy tryb podstawy składki zdrowotnej: {income_basis}")
+
     monthly = {}
     total = ZERO
 
     months = sorted(
         set(monthly_jpk.keys()) | set(delegations_monthly.keys()) | set(other_costs_monthly.keys())
     )
+    income_by_month = {
+        month: calculate_monthly_business_income(
+            month,
+            monthly_jpk,
+            delegations_monthly,
+            other_costs_monthly,
+        )
+        for month in months
+    }
 
     for month in months:
-        data = monthly_jpk.get(month, {})
-        result = calculate_health_contribution_scale(
+        income_month = previous_month(month) if income_basis == PREVIOUS_MONTH else month
+        result = calculate_health_contribution_from_income(
             month=month,
-            revenue=Decimal(str(data.get("sales_net", ZERO))),
-            purchase_costs=Decimal(str(data.get("purchase_net", ZERO))),
-            delegation_costs=Decimal(str(delegations_monthly.get(month, ZERO))),
-            other_costs=Decimal(str(other_costs_monthly.get(month, ZERO))),
+            business_income=income_by_month.get(income_month, ZERO),
         )
         monthly[month] = result
         total += result.contribution

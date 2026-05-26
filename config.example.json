@@ -2,6 +2,7 @@
     "podmiot": {"nip": "YOUR_NIP"},
     "taxpayer": {"is_pensioner": true, "settle_jointly_with_spouse": true},
     "business": {"enabled": true, "taxation_form": "scale", "vat_payer": true},
+    "health_contribution": {"income_basis": "previous_month"},
     "pension": {"enabled": true, "annual_income": "0.00"},
     "spouse": {"enabled": true, "annual_income": "0.00"},
     "delegations_csv": "C:/tax-app-data/delegacje/delegations.csv",
