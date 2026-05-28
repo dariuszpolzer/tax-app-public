@@ -1,0 +1,14 @@
+{
+  "host": "serwer2444607.home.pl",
+  "username": "YOUR_FTP_USER",
+  "password": "YOUR_FTP_PASSWORD",
+  "tls": false,
+  "passive": true,
+  "files": [
+    {
+      "name": "delegations_xml",
+      "local_path": "C:/tax-app-data/delegacje/Col_Voyage.xml",
+      "remote_path": "/tax_exchange/delegacje/Col_Voyage.xml"
+    }
+  ]
+}

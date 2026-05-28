@@ -56,6 +56,37 @@ Do przejścia ze starego XML na CSV służy konwerter:
 uv run python tools/convert_voyages_to_delegations_csv.py C:/tax-app-data/delegacje/Col_Voyage.xml C:/tax-app-data/delegacje/delegations.csv
 ```
 
+### Synchronizacja `Col_Voyage.xml` przez FTP
+
+Do wymiany pliku delegacji między komputerami użyj prywatnego katalogu FTP poza
+publicznym katalogiem WWW, np.:
+
+```text
+/tax_exchange/delegacje/Col_Voyage.xml
+```
+
+Skopiuj `ftp-sync.example.json` do `ftp-sync.json` i wpisz lokalne dane FTP.
+`ftp-sync.json` jest ignorowany przez Git i nie powinien trafiać do repozytorium.
+
+Pobranie aktualnego pliku z FTP:
+
+```powershell
+.\tools\download_delegations.ps1
+```
+
+Wysłanie lokalnego pliku na FTP:
+
+```powershell
+.\tools\upload_delegations.ps1
+```
+
+`config.json` powinien wskazywać tę samą lokalną kopię, która jest synchronizowana
+z FTP:
+
+```json
+"trips_xml": "C:/tax-app-data/delegacje/Col_Voyage.xml"
+```
+
 ## Dane wejściowe
 
 Plik `config.json` wskazuje źródła danych:
