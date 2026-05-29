@@ -1,7 +1,7 @@
 # Tax App
 
 ![Python](https://img.shields.io/badge/python-3.13-blue)
-![Quality](https://github.com/dariuszpolzer/tax-app/actions/workflows/quality.yml/badge.svg)
+![Quality](https://github.com/dariuszpolzer/tax-app-public/actions/workflows/quality.yml/badge.svg)
 ![Tests](https://img.shields.io/badge/tests-pytest-green)
 ![License](https://img.shields.io/badge/license-MIT-lightgrey)
 
@@ -25,6 +25,7 @@ Aplikacja korzysta z:
 - wspólne rozliczenie z małżonkiem według zasady: podatek od połowy łącznej podstawy razy dwa
 - porównanie PIT osobno vs wspólnie
 - eksport raportów do plików CSV i XLSX
+- walidacja konfiguracji i danych wejściowych przed generowaniem raportów
 
 ## Środowisko
 
@@ -45,8 +46,11 @@ DEL/1/2026;2026-03-01;2026-03-25;2026;Brunsbuttel;Delegacja sluzbowa;samochod;Ja
 ```
 
 Minimalne pola potrzebne do obliczeń to `date_to` oraz `amount_pln`.
-Koszt delegacji jest przypisywany do miesiąca z `date_to`. Jeśli w configu nie ma
-ani `delegations_csv`, ani `trips_xml`, aplikacja przyjmuje brak delegacji.
+Koszt delegacji jest przypisywany do miesiąca z `date_to`.
+
+Jeśli w configu ustawione są oba pola, `delegations_csv` ma pierwszeństwo przed
+legacy `trips_xml`. Jeśli w configu nie ma ani `delegations_csv`, ani
+`trips_xml`, aplikacja przyjmuje brak delegacji.
 
 `trips_xml` jest importerem legacy dla prywatnego formatu `Voyage.xml` używanego
 we wcześniejszych makrach VBA. Nie jest to publiczny ani oficjalny format danych.
@@ -133,6 +137,29 @@ date;type;description;amount_pln
 2026-04-20;bank;Opłata bankowa;50,50
 ```
 
+## Walidacja
+
+Przed generowaniem raportu można sprawdzić konfigurację i dane wejściowe:
+
+```powershell
+uv run python main.py validate --year 2026 --config config.json
+```
+
+Walidacja sprawdza:
+
+- istnienie pliku `config.json` oraz ścieżek do danych,
+- poprawność profilu podatnika,
+- obecność i format plików JPK XML,
+- wymagane kolumny, daty i kwoty w `delegations_csv`,
+- wymagane kolumny, daty i kwoty w `other_costs_csv`,
+- ostrzeżenia dla danych z innego roku niż walidowany raport.
+
+Opcjonalnie można pominąć sprawdzanie folderu JPK:
+
+```powershell
+uv run python main.py validate --year 2026 --config config.json --skip-jpk
+```
+
 ## Profil podatnika
 
 Sekcja `taxpayer` steruje wariantem rozliczenia:
@@ -216,6 +243,31 @@ oraz miesięczną składkę zdrowotną JDG.
 dochodem małżonka oraz porównaniem `PIT osobno` i `PIT wspólnie`.
 Raport XLSX zawiera też arkusze z danymi wejściowymi oraz ostrzeżeniami
 walidacji.
+
+Arkusze w `report_tax.xlsx`:
+
+- `Dashboard`,
+- `VAT miesięcznie`,
+- `PIT JDG`,
+- `Zdrowotna JDG`,
+- `Delegacje`,
+- `Inne koszty`,
+- `Roczny`,
+- `Dane wejściowe`,
+- `Ostrzeżenia`.
+
+## Orchestratory
+
+Lokalne launchery workflow nie są częścią publicznego repo `tax-app-public`.
+Są utrzymywane osobno w prywatnym repozytorium `Orchestrators`.
+
+Typowy zewnętrzny workflow uruchamia:
+
+1. synchronizację KSeF,
+2. generowanie JPK,
+3. pobranie delegacji,
+4. `tax-app-public validate`,
+5. `tax-app-public report`.
 
 ## Kontrola
 
