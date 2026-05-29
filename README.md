@@ -174,16 +174,34 @@ stawki 9% i minimalnej składki miesięcznej zapisanej w parametrach roku.
 
 ## Uruchomienie
 
+Walidacja konfiguracji i danych wejściowych:
+
+```powershell
+uv run python main.py validate --year 2026 --config config.json
+```
+
 Raport roczny:
 
 ```powershell
-uv run python main.py --year 2026 --out-dir reports/2026
+uv run python main.py report --year 2026 --out-dir reports/2026
 ```
 
 Raport narastająco do wskazanego miesiąca:
 
 ```powershell
-uv run python main.py --year 2026 --month 4 --out-dir reports/2026-04
+uv run python main.py report --year 2026 --month 4 --out-dir reports/2026-04
+```
+
+Stary wariant wywołania bez podkomendy nadal działa:
+
+```powershell
+uv run python main.py --year 2026 --out-dir reports/2026
+```
+
+Kontrola samych delegacji:
+
+```powershell
+uv run python main.py delegations check --year 2026
 ```
 
 Wynikiem są:
@@ -196,6 +214,8 @@ Wynikiem są:
 oraz miesięczną składkę zdrowotną JDG.
 `report_yearly.csv` i `report_tax.xlsx` zawierają roczne PIT z emeryturą,
 dochodem małżonka oraz porównaniem `PIT osobno` i `PIT wspólnie`.
+Raport XLSX zawiera też arkusze z danymi wejściowymi oraz ostrzeżeniami
+walidacji.
 
 ## Kontrola
 

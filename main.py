@@ -16,12 +16,18 @@ from parser_trips import load_voyages
 from report.export_excel import export_excel_report
 from report.export_reports import export_monthly_report, export_yearly_report
 from settlement import BusinessIncome, calculate_annual_settlement
+from validation import validate_config_data
 
 ZERO = Decimal("0.00")
 
 
-def parse_args():
-    parser = argparse.ArgumentParser(description="Tax App - lokalne raporty podatkowe")
+def configure_console_encoding():
+    for stream in (sys.stdout, sys.stderr):
+        if hasattr(stream, "reconfigure"):
+            stream.reconfigure(encoding="utf-8")
+
+
+def add_report_arguments(parser):
     parser.add_argument("--year", type=int, help="Rok raportu, np. 2026")
     parser.add_argument(
         "--month",
@@ -31,15 +37,59 @@ def parse_args():
     )
     parser.add_argument("--config", default="config.json", help="Ścieżka do pliku config.json")
     parser.add_argument("--out-dir", default=".", help="Katalog wyjściowy raportów")
+
+
+def add_delegation_arguments(parser):
+    parser.add_argument("--year", type=int, help="Rok raportu, np. 2026")
+    parser.add_argument(
+        "--month",
+        type=int,
+        default=0,
+        help="Miesiąc raportu 1-12. Brak lub 0 oznacza cały rok.",
+    )
+    parser.add_argument("--config", default="config.json", help="Ścieżka do pliku config.json")
+
+
+def build_parser():
+    parser = argparse.ArgumentParser(description="Tax App - lokalne raporty podatkowe")
+    subparsers = parser.add_subparsers(dest="command")
+
+    report_parser = subparsers.add_parser("report", help="Generuje raporty podatkowe")
+    add_report_arguments(report_parser)
+
+    validate_parser = subparsers.add_parser("validate", help="Sprawdza config i dane wejściowe")
+    validate_parser.add_argument("--year", type=int, help="Rok walidacji, np. 2026")
+    validate_parser.add_argument("--config", default="config.json", help="Ścieżka do config.json")
+    validate_parser.add_argument(
+        "--skip-jpk",
+        action="store_true",
+        help="Pomija walidację folderu JPK",
+    )
+
+    delegations_parser = subparsers.add_parser("delegations", help="Operacje na delegacjach")
+    delegation_subparsers = delegations_parser.add_subparsers(dest="delegations_command")
+    check_parser = delegation_subparsers.add_parser("check", help="Sprawdza delegacje")
+    add_delegation_arguments(check_parser)
+
+    add_report_arguments(parser)
     parser.add_argument(
         "--check-delegations",
         action="store_true",
-        help="Sprawdza tylko delegacje z trips_xml i wypisuje sumy oraz ostrzeżenia",
+        help="Legacy: sprawdza tylko delegacje i wypisuje sumy oraz ostrzeżenia",
     )
+    return parser
+
+
+def parse_args():
+    parser = build_parser()
 
     args = parser.parse_args()
+    if args.command is None:
+        args.command = "delegations" if args.check_delegations else "report"
+        if args.check_delegations:
+            args.delegations_command = "check"
 
-    if args.month < 0 or args.month > 12:
+    if hasattr(args, "month") and (args.month < 0 or args.month > 12):
         raise ValueError(f"Nieprawidłowy miesiąc: {args.month}")
 
     return args
@@ -304,6 +354,8 @@ def export_all_reports(
     health_contribution_total,
     year,
     out_dir,
+    validation_warnings=None,
+    config=None,
 ):
     out_dir = Path(out_dir)
     out_dir.mkdir(parents=True, exist_ok=True)
@@ -354,6 +406,8 @@ def export_all_reports(
         trips,
         year,
         excel_report,
+        validation_warnings=validation_warnings,
+        config=config,
     )
 
     print("\nZapisano raporty:")
@@ -362,17 +416,29 @@ def export_all_reports(
     print(excel_report)
 
 
+def print_validation_report(report):
+    print("\nWALIDACJA DANYCH")
+
+    for item in report.info:
+        print(f"OK {item}")
+
+    for warning in report.warnings:
+        print(f"WARN {warning}")
+
+    for error in report.errors:
+        print(f"ERROR {error}")
+
+    if report.ok:
+        print("\n=== VALIDATION OK ===")
+    else:
+        print("\n=== VALIDATION FAILED ===")
+
+
 def health_contribution_income_basis_from_config(config):
     return config.get("health_contribution", {}).get("income_basis", PREVIOUS_MONTH)
 
 
-def main():
-    args = parse_args()
-    config = load_config(args.config, require_jpk=not args.check_delegations)
-
-    current_year = args.year or datetime.now().year
-    current_month = args.month
-
+def load_trips_from_config(config, current_year, current_month):
     if config.get("delegations_csv"):
         all_trips = load_delegations_csv(config["delegations_csv"])
     elif config.get("trips_xml"):
@@ -380,11 +446,36 @@ def main():
     else:
         all_trips = []
 
-    trips = [trip for trip in all_trips if trip_is_in_scope(trip, current_year, current_month)]
+    return [trip for trip in all_trips if trip_is_in_scope(trip, current_year, current_month)]
 
-    if args.check_delegations:
-        print_delegation_check_report(trips)
-        return
+
+def run_validate(args):
+    current_year = args.year or datetime.now().year
+    report = validate_config_data(args.config, current_year, require_jpk=not args.skip_jpk)
+    print_validation_report(report)
+    return 0 if report.ok else 2
+
+
+def run_delegations_check(args):
+    config = load_config(args.config, require_jpk=False)
+    current_year = args.year or datetime.now().year
+    trips = load_trips_from_config(config, current_year, args.month)
+    print_delegation_check_report(trips)
+    return 0
+
+
+def run_report(args):
+    config = load_config(args.config, require_jpk=True)
+
+    current_year = args.year or datetime.now().year
+    current_month = args.month
+
+    validation_report = validate_config_data(args.config, current_year)
+    if not validation_report.ok:
+        print_validation_report(validation_report)
+        return 2
+
+    trips = load_trips_from_config(config, current_year, current_month)
 
     delegation_costs = sum_trip_costs(trips)
     delegations_monthly = sum_trip_costs_by_month(trips)
@@ -466,14 +557,29 @@ def main():
         health_summary.total,
         current_year,
         args.out_dir,
+        validation_warnings=validation_report.warnings,
+        config=config,
     )
+    return 0
+
+
+def main():
+    configure_console_encoding()
+    args = parse_args()
+    if args.command == "validate":
+        return run_validate(args)
+    if args.command == "delegations":
+        if args.delegations_command != "check":
+            raise ValueError("Brak podkomendy delegations. Dostępne: check")
+        return run_delegations_check(args)
+    return run_report(args)
 
 
 if __name__ == "__main__":
     try:
-        main()
+        exit_code = main()
         print("\n=== TAX APP OK ===")
-        sys.exit(0)
+        sys.exit(exit_code)
     except FileNotFoundError as error:
         print(f"\nBŁĄD PLIKU: {error}")
         sys.exit(2)

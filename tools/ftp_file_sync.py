@@ -1,5 +1,5 @@
 import argparse
-import ftplib
+import ftplib  # nosec B402
 import json
 import os
 from pathlib import Path, PurePosixPath

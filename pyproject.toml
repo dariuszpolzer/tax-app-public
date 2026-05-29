@@ -48,6 +48,7 @@ py-modules = [
     "models",
     "other_costs",
     "parser_trips",
+    "validation",
 ]
 
 [tool.setuptools.packages.find]

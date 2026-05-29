@@ -4,8 +4,10 @@ import subprocess
 import sys
 from pathlib import Path
 
+from openpyxl import load_workbook
 
-def test_cli_generates_reports_from_config_with_delegations_csv(tmp_path):
+
+def make_cli_fixture(tmp_path):
     repo_root = Path(__file__).resolve().parents[1]
 
     jpk_dir = tmp_path / "jpk"
@@ -52,6 +54,11 @@ def test_cli_generates_reports_from_config_with_delegations_csv(tmp_path):
         encoding="utf-8",
     )
 
+    return repo_root, config_path
+
+
+def test_cli_generates_reports_from_config_with_delegations_csv(tmp_path):
+    repo_root, config_path = make_cli_fixture(tmp_path)
     out_dir = tmp_path / "reports"
 
     result = subprocess.run(
@@ -86,6 +93,22 @@ def test_cli_generates_reports_from_config_with_delegations_csv(tmp_path):
     assert excel_report.exists()
     assert excel_report.stat().st_size > 0
 
+    workbook = load_workbook(excel_report, data_only=True)
+    assert {
+        "Dashboard",
+        "VAT miesięcznie",
+        "PIT JDG",
+        "Zdrowotna JDG",
+        "Delegacje",
+        "Inne koszty",
+        "Roczny",
+        "Dane wejściowe",
+        "Ostrzeżenia",
+    }.issubset(set(workbook.sheetnames))
+    assert workbook["Dashboard"]["A1"].value == "Podsumowanie podatkowe"
+    assert workbook["Dane wejściowe"]["A2"].value == "business.enabled"
+    assert workbook["Ostrzeżenia"]["A2"].value == "OK"
+
     monthly_content = monthly_report.read_text(encoding="utf-8-sig")
     assert "2026-03;1000,00;200,00;230,00;46,00;184,00;123,45;50,00" in monthly_content
     assert "Dochód JDG do zdrowotnej" in monthly_content
@@ -96,3 +119,57 @@ def test_cli_generates_reports_from_config_with_delegations_csv(tmp_path):
     assert "Koszty delegacji;123,45" in yearly_content
     assert "Inne koszty;50,00" in yearly_content
     assert "Składka zdrowotna JDG" in yearly_content
+
+
+def test_cli_validate_command_checks_input_data(tmp_path):
+    repo_root, config_path = make_cli_fixture(tmp_path)
+
+    result = subprocess.run(
+        [
+            sys.executable,
+            "main.py",
+            "validate",
+            "--year",
+            "2026",
+            "--config",
+            str(config_path),
+        ],
+        cwd=repo_root,
+        text=True,
+        encoding="utf-8",
+        errors="replace",
+        capture_output=True,
+        check=False,
+    )
+
+    assert result.returncode == 0, result.stdout + result.stderr
+    assert "WALIDACJA DANYCH" in result.stdout
+    assert "=== VALIDATION OK ===" in result.stdout
+
+
+def test_cli_report_subcommand_generates_reports(tmp_path):
+    repo_root, config_path = make_cli_fixture(tmp_path)
+    out_dir = tmp_path / "reports"
+
+    result = subprocess.run(
+        [
+            sys.executable,
+            "main.py",
+            "report",
+            "--year",
+            "2026",
+            "--config",
+            str(config_path),
+            "--out-dir",
+            str(out_dir),
+        ],
+        cwd=repo_root,
+        text=True,
+        encoding="utf-8",
+        errors="replace",
+        capture_output=True,
+        check=False,
+    )
+
+    assert result.returncode == 0, result.stdout + result.stderr
+    assert (out_dir / "report_tax.xlsx").exists()

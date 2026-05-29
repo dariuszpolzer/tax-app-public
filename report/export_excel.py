@@ -36,6 +36,41 @@ def format_money(wb):
                     cell.number_format = '#,##0.00 "PLN"'
 
 
+def add_key_value_sheet(wb, title, rows):
+    ws = wb.create_sheet(title)
+    ws.append(["Pole", "Wartość"])
+    for row in rows:
+        ws.append(row)
+    style_header(ws)
+    autofit(ws)
+
+
+def add_warnings_sheet(wb, warnings):
+    ws = wb.create_sheet("Ostrzeżenia")
+    ws.append(["Typ", "Treść"])
+    if warnings:
+        for warning in warnings:
+            ws.append(["WARN", warning])
+    else:
+        ws.append(["OK", "Brak ostrzeżeń walidacji"])
+    style_header(ws)
+    autofit(ws)
+
+
+def config_rows(config):
+    if not config:
+        return []
+    rows = []
+    for key in sorted(config):
+        value = config[key]
+        if isinstance(value, dict):
+            for child_key in sorted(value):
+                rows.append([f"{key}.{child_key}", str(value[child_key])])
+        else:
+            rows.append([key, str(value)])
+    return rows
+
+
 def add_dashboard_sheet(
     wb,
     yearly_jpk,
@@ -103,6 +138,8 @@ def export_excel_report(
     trips,
     year,
     out_file,
+    validation_warnings=None,
+    config=None,
 ):
     wb = Workbook()
 
@@ -249,6 +286,9 @@ def export_excel_report(
         ws.append(row)
 
     autofit(ws)
+
+    add_key_value_sheet(wb, "Dane wejściowe", config_rows(config))
+    add_warnings_sheet(wb, validation_warnings or [])
     format_money(wb)
 
     wb.save(out_file)
