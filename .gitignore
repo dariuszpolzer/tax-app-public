@@ -9,6 +9,7 @@ __pycache__/
 # config lokalny
 config.json
 ftp-sync.json
+.env
 
 # vscode
 .vscode/
@@ -19,6 +20,7 @@ Thumbs.db
 
 project_for_ai.txt
 *.xml
+*.log
 data/
 !tests/data/
 !tests/data/*.xml

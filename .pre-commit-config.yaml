@@ -1,0 +1,8 @@
+repos:
+  - repo: local
+    hooks:
+      - id: security-check
+        name: local security check
+        entry: python tools/security_check.py --redact
+        language: system
+        pass_filenames: false
