@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Faktura xmlns="http://example.test/ksef">
+  <Podmiot1>
+    <DaneIdentyfikacyjne>
+      <NIP>1234567890</NIP>
+      <Nazwa>Test Seller Sp. z o.o.</Nazwa>
+    </DaneIdentyfikacyjne>
+  </Podmiot1>
+  <Podmiot2>
+    <DaneIdentyfikacyjne>
+      <Nazwa>Non EU Customer Ltd.</Nazwa>
+    </DaneIdentyfikacyjne>
+  </Podmiot2>
+  <Fa>
+    <P_1>2026-06-03</P_1>
+    <P_2>FV/EXPORT-0/3/2026</P_2>
+    <P_6>2026-06-03</P_6>
+    <P_13_1>1200.00</P_13_1>
+    <P_14_1>0.00</P_14_1>
+    <P_15>1200.00</P_15>
+    <FaWiersz>
+      <P_7>Eksport oprogramowania poza UE</P_7>
+      <P_11>1200.00</P_11>
+      <P_11Vat>0.00</P_11Vat>
+      <P_12>0</P_12>
+    </FaWiersz>
+  </Fa>
+</Faktura>

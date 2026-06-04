@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Faktura xmlns="http://example.test/ksef">
+  <Podmiot1>
+    <DaneIdentyfikacyjne>
+      <NIP>1234567890</NIP>
+      <Nazwa>Test Seller Sp. z o.o.</Nazwa>
+    </DaneIdentyfikacyjne>
+  </Podmiot1>
+  <Podmiot2>
+    <DaneIdentyfikacyjne>
+      <NIP>5554443322</NIP>
+      <Nazwa>Odbiorca Korekty Sp. z o.o.</Nazwa>
+    </DaneIdentyfikacyjne>
+  </Podmiot2>
+  <Fa>
+    <P_1>2026-06-04</P_1>
+    <P_2>KOR/IL-WAR-OO/4/2026</P_2>
+    <P_6>2026-06-04</P_6>
+    <P_13_1>-350.00</P_13_1>
+    <P_14_1>-23.00</P_14_1>
+    <P_15>-373.00</P_15>
+    <FaWiersz>
+      <P_7>Korekta ilościowa - zwrot usługi</P_7>
+      <P_11>-100.00</P_11>
+      <P_11Vat>-23.00</P_11Vat>
+      <P_12>23</P_12>
+    </FaWiersz>
+    <FaWiersz>
+      <P_7>Korekta wartościowa - rabat na książki</P_7>
+      <P_11>-50.00</P_11>
+      <P_11Vat>0.00</P_11Vat>
+      <P_12>0</P_12>
+    </FaWiersz>
+    <FaWiersz>
+      <P_7>Odwrotne obciążenie - komponent oprogramowania</P_7>
+      <P_11>-200.00</P_11>
+      <P_11Vat>0.00</P_11Vat>
+      <P_12>OO</P_12>
+    </FaWiersz>
+  </Fa>
+</Faktura>

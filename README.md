@@ -269,6 +269,127 @@ Typowy zewnętrzny workflow uruchamia:
 4. `tax-app-public validate`,
 5. `tax-app-public report`.
 
+### Harmonogram zadań Windows
+
+Do prostego uruchamiania cyklicznego można zarejestrować zadania Windows dla
+prywatnych launcherów z repo `Orchestrators`:
+
+```powershell
+.\tools\register_windows_tasks.ps1 `
+  -MonitorMFPath "C:\Orchestrators\MonitorMF.ps1" `
+  -OfflineE2EPath "C:\Orchestrators\OfflineE2E.ps1" `
+  -VerifyPreviousPath "C:\Orchestrators\VerifyPrevious.ps1" `
+  -MonitorMFSchedule Daily `
+  -MonitorMFTime "06:00"
+```
+
+`MonitorMF` jest rejestrowany jako zadanie dzienne albo tygodniowe:
+
+```powershell
+.\tools\register_windows_tasks.ps1 `
+  -MonitorMFPath "C:\Orchestrators\MonitorMF.ps1" `
+  -OfflineE2EPath "C:\Orchestrators\OfflineE2E.ps1" `
+  -VerifyPreviousPath "C:\Orchestrators\VerifyPrevious.ps1" `
+  -MonitorMFSchedule Weekly `
+  -MonitorMFWeeklyDay Monday `
+  -MonitorMFTime "06:00"
+```
+
+`OfflineE2E` i `VerifyPrevious` są rejestrowane jako zadania uruchamiane ręcznie
+z Harmonogramu zadań albo komendą:
+
+```powershell
+schtasks /Run /TN "\TaxApp\OfflineE2E"
+schtasks /Run /TN "\TaxApp\VerifyPrevious"
+```
+
+Praktyczny rytm:
+
+- `MonitorMF` raz dziennie albo raz w tygodniu,
+- `OfflineE2E` po każdej większej zmianie,
+- `VerifyPrevious` po zamknięciu miesiąca.
+
+### Alert po zmianie MF
+
+Jeśli prywatny `MonitorMF` wykryje zmianę w źródłach Ministerstwa Finansów,
+może zapisać ostatni status przez wspólny adapter:
+
+```powershell
+.\tools\write_mf_monitor_status.ps1 `
+  -Status Changed `
+  -Message "Wykryto zmianę komunikatu MF" `
+  -PreviousValue "2026-05-01" `
+  -CurrentValue "2026-06-04" `
+  -SourceUrl "https://www.podatki.gov.pl/" `
+  -OutDir "."
+```
+
+Skrypt zapisuje:
+
+- `mf_monitor_latest_status.txt` - prosty status do szybkiego odczytu,
+- `mf_monitor_latest_status.json` - status strukturalny dla automatyzacji,
+- `mf_monitor_alert.html` - gotowy fragment do wklejenia lub osadzenia w raporcie HTML.
+
+Dla braku zmiany:
+
+```powershell
+.\tools\write_mf_monitor_status.ps1 `
+  -Status NoChange `
+  -Message "Brak zmian MF" `
+  -CurrentValue "2026-06-04"
+```
+
+Opcjonalne wysłanie maila przy `Changed` albo `Error`:
+
+```powershell
+.\tools\write_mf_monitor_status.ps1 `
+  -Status Changed `
+  -Message "Wykryto zmianę komunikatu MF" `
+  -CurrentValue "2026-06-04" `
+  -SendMail `
+  -SmtpServer "smtp.example.com" `
+  -SmtpPort 587 `
+  -MailFrom "tax-app@example.com" `
+  -MailTo "adres@example.com" `
+  -UseSsl
+```
+
+Mail nie jest wysyłany dla `NoChange`.
+
+### Jedno polecenie kontrolne
+
+Po zarejestrowaniu zadań Windows można uruchomić pełny lokalny audyt jednym
+poleceniem:
+
+```powershell
+.\wife-launcher.ps1 -Action AuditAll
+```
+
+`AuditAll` wykonuje kolejno:
+
+- `Doctor`, czyli lokalne `.\check.ps1`,
+- `MonitorMF` z Harmonogramu zadań,
+- `OfflineE2E` z Harmonogramu zadań,
+- ostatni `VerifyPrevious` z Harmonogramu zadań,
+- `security-check`, czyli `tools/security_check.py --redact`.
+
+Pojedyncze akcje można uruchomić tym samym launcherem:
+
+```powershell
+.\wife-launcher.ps1 -Action Doctor
+.\wife-launcher.ps1 -Action MonitorMF
+.\wife-launcher.ps1 -Action OfflineE2E
+.\wife-launcher.ps1 -Action VerifyPrevious
+.\wife-launcher.ps1 -Action SecurityCheck
+```
+
+Domyślna ścieżka zadań to `\TaxApp\`. Jeśli zadania są zarejestrowane gdzie
+indziej:
+
+```powershell
+.\wife-launcher.ps1 -Action AuditAll -TaskPath "\InnaSciezka\"
+```
+
 ## Kontrola
 
 ```powershell

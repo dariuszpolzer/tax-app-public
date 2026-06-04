@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Faktura xmlns="http://example.test/ksef">
+  <Podmiot1>
+    <DaneIdentyfikacyjne>
+      <NIP>1234567890</NIP>
+      <Nazwa>Test Seller Sp. z o.o.</Nazwa>
+    </DaneIdentyfikacyjne>
+  </Podmiot1>
+  <Podmiot2>
+    <DaneIdentyfikacyjne>
+      <NIP>9876543210</NIP>
+      <Nazwa>Polski Odbiorca Sp. z o.o.</Nazwa>
+    </DaneIdentyfikacyjne>
+  </Podmiot2>
+  <Fa>
+    <P_1>2026-06-01</P_1>
+    <P_2>FV/USL-KS-OPR/1/2026</P_2>
+    <P_6>2026-06-01</P_6>
+    <P_13_1>1500.00</P_13_1>
+    <P_14_1>345.00</P_14_1>
+    <P_15>1845.00</P_15>
+    <FaWiersz>
+      <P_7>Usługa konsultingowa</P_7>
+      <P_11>1000.00</P_11>
+      <P_11Vat>230.00</P_11Vat>
+      <P_12>23</P_12>
+    </FaWiersz>
+    <FaWiersz>
+      <P_7>Książka branżowa</P_7>
+      <P_11>200.00</P_11>
+      <P_11Vat>46.00</P_11Vat>
+      <P_12>23</P_12>
+    </FaWiersz>
+    <FaWiersz>
+      <P_7>Licencja oprogramowania</P_7>
+      <P_11>300.00</P_11>
+      <P_11Vat>69.00</P_11Vat>
+      <P_12>23</P_12>
+    </FaWiersz>
+  </Fa>
+</Faktura>

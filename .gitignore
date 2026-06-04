@@ -21,9 +21,14 @@ Thumbs.db
 project_for_ai.txt
 *.xml
 *.log
+mf_monitor_latest_status.txt
+mf_monitor_latest_status.json
+mf_monitor_alert.html
 data/
 !tests/data/
 !tests/data/*.xml
+!tests/data/ksef/
+!tests/data/ksef/*.xml
 reports/
 legacy/
 
